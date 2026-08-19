@@ -40,6 +40,67 @@
   }
 
   // --------------------------------------------------------------------
+  // Sound — procedural oscillators, default OFF, never prompts twice.
+  // `ctx` is only ever constructed inside ensureAudio(), and ensureAudio()
+  // is only ever called from the sound-toggle's own click handler (a real
+  // user gesture). tone() deliberately does NOT call ensureAudio() itself:
+  // an AudioContext created outside a gesture (e.g. from a setTimeout in
+  // the reveal sequence) is born suspended and stays silent, so tone()
+  // just no-ops via the `!ctx` check when sound was never enabled.
+  // --------------------------------------------------------------------
+
+  var ctx = null;
+
+  function getSoundPref() {
+    try { return localStorage.getItem("vq_sound"); } catch (e) { return null; }
+  }
+
+  function setSoundPref(v) {
+    try { localStorage.setItem("vq_sound", v); } catch (e) { /* ignore */ }
+  }
+
+  function isSoundOn() {
+    return getSoundPref() === "on";
+  }
+
+  function ensureAudio() {
+    if (!ctx) {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return null;
+      try { ctx = new AC(); } catch (e) { return null; }
+    }
+    if (ctx.state === "suspended") {
+      try { ctx.resume(); } catch (e) { /* ignore */ }
+    }
+    return ctx;
+  }
+
+  function tone(freq, durationMs, type, gainPeak) {
+    if (!ctx || !isSoundOn()) return;
+    type = type || "sine";
+    gainPeak = gainPeak === undefined ? 0.06 : gainPeak;
+
+    var osc = ctx.createOscillator();
+    var gain = ctx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, ctx.currentTime);
+
+    gain.gain.setValueAtTime(0, ctx.currentTime);
+    gain.gain.linearRampToValueAtTime(gainPeak, ctx.currentTime + 0.008);
+    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + durationMs / 1000);
+
+    osc.connect(gain).connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + durationMs / 1000);
+  }
+
+  function playRevealSound() {
+    tone(220, 120, "sine");
+    setTimeout(function () { tone(440, 160, "sine"); }, 100);
+    setTimeout(function () { tone(880, 220, "triangle", 0.05); }, 240);
+  }
+
+  // --------------------------------------------------------------------
   // Question rendering
   // --------------------------------------------------------------------
 
@@ -68,13 +129,25 @@
         "</button>";
     });
 
+    // Sound control shows once, on the first question only, and only while
+    // the user has not yet decided (localStorage key absent). Once a choice
+    // exists — including across a retake's renderQuestion(0) — it never
+    // reappears, matching "never prompt twice."
+    var soundToggleHtml = "";
+    if (idx === 0 && getSoundPref() === null) {
+      soundToggleHtml = '<button type="button" class="sound-toggle" aria-pressed="false">SOUND OFF</button>';
+    }
+
     quizApp.innerHTML =
       '<div class="quiz-topbar">' +
       '<div class="q-counter">' +
       '<span class="q-counter-track"><span class="q-counter-digit">' + progressLabel + "</span></span>" +
       '<span class="q-counter-total">/ ' + totalLabel + "</span>" +
       "</div>" +
+      '<div class="quiz-topbar-right">' +
       '<button type="button" class="quiz-back"' + (idx === 0 ? " hidden" : "") + '>← back</button>' +
+      soundToggleHtml +
+      "</div>" +
       "</div>" +
       '<div class="progress-bar-track"><div class="progress-bar-fill" style="width:' + barPercent + '%"></div></div>' +
       '<div class="dot-trail">' + dotsHtml + "</div>" +
@@ -89,6 +162,17 @@
       if (state.locked || idx === 0) return;
       renderQuestion(idx - 1);
     });
+
+    var soundBtn = quizApp.querySelector(".sound-toggle");
+    if (soundBtn) {
+      soundBtn.addEventListener("click", function () {
+        ensureAudio(); // gesture-created here — never from a timer or on load
+        setSoundPref("on");
+        soundBtn.textContent = "SOUND ON";
+        soundBtn.setAttribute("aria-pressed", "true");
+        tone(660, 90, "sine", 0.05);
+      });
+    }
 
     var optionEls = quizApp.querySelectorAll(".answer-tile");
     optionEls.forEach(function (el) {
@@ -144,6 +228,8 @@
     state.justAnsweredIndex = idx;
 
     buzz(8);
+    tone(520 + optionIndex * 40, 55, "sine", 0.05);
+    if ((idx + 1) % 4 === 0) tone(660, 70, "triangle", 0.04);
 
     var isLastQuestion = idx + 1 >= totalQuestions;
     var nextTargetPercent = ((idx + 1) / totalQuestions) * 100;
@@ -152,7 +238,7 @@
       // No drift, no overshoot — commit the answer and advance immediately.
       el.classList.add("is-selected");
       if (isLastQuestion) {
-        showResult(null, { showTakeQuizButton: false });
+        showResult(null, { showTakeQuizButton: false, animate: true });
       } else {
         renderQuestion(idx + 1);
         state.locked = false;
@@ -202,7 +288,7 @@
         state.locked = false;
       } else {
         setTimeout(function () {
-          showResult(null, { showTakeQuizButton: false });
+          showResult(null, { showTakeQuizButton: false, animate: true });
         }, 200);
       }
     }, 500);
@@ -316,21 +402,55 @@
     return "<strong>" + escapeHtml(first) + "</strong>" + (rest ? " " + escapeHtml(rest) : "");
   }
 
-  function showResult(forcedWinnerId, opts) {
+  function playReveal(winnerId, winner) {
+    var palette = winner.palette;
+    return new Promise(function (resolve) {
+      resultsApp.innerHTML =
+        '<div class="reveal-card" style="--p1:' + palette.bg[0] + ";--p2:" + palette.bg[1] + ";--p3:" + palette.bg[2] + '">' +
+        '<div class="reveal-card-back"><span class="reveal-label">YOUR VIBE</span></div>' +
+        '<div class="reveal-card-face"><span class="reveal-eyebrow">APPARENTLY, YOU\'RE</span><span class="reveal-name">' + escapeHtml(winner.name) + "</span></div>" +
+        "</div>" +
+        '<div class="reveal-flash"></div>';
+      quizApp.setAttribute("hidden", "");
+      resultsApp.removeAttribute("hidden");
+      window.scrollTo(0, 0);
+
+      var card = resultsApp.querySelector(".reveal-card");
+      var flash = resultsApp.querySelector(".reveal-flash");
+
+      // 300ms — card fades in and starts its idle wobble (3 cycles x 220ms = 660ms, ending at 960ms)
+      setTimeout(function () {
+        card.classList.add("is-visible");
+      }, 300);
+
+      // 960ms — flip begins; the lift (scale 1 -> 1.05 -> 1) rides alongside
+      // the rotateY transition via a separate WAAPI keyframe, per spec.
+      setTimeout(function () {
+        card.classList.add("is-flipping");
+        if (typeof card.animate === "function") {
+          card.animate(
+            [{ transform: "scale(1)" }, { transform: "scale(1.05)", offset: 0.5 }, { transform: "scale(1)" }],
+            { duration: 440, easing: "cubic-bezier(.4,.1,.3,1)" }
+          );
+        }
+      }, 960);
+
+      // 1180ms — midpoint: haptic + sound + flash fire together
+      setTimeout(function () {
+        buzz(18);
+        playRevealSound();
+        flash.classList.add("is-flashing");
+      }, 1180);
+
+      // ~1500ms — hand back to showResult() to swap in the final result markup
+      setTimeout(resolve, 1500);
+    });
+  }
+
+  function renderResultMarkup(winnerId, computed, opts) {
     opts = opts || {};
     var showTakeQuizButton = !!opts.showTakeQuizButton;
 
-    var computed = computeScores();
-    var winnerId;
-    if (forcedWinnerId && forcedWinnerId in results) {
-      winnerId = forcedWinnerId;
-      // Direct-link view has no real answers behind it, so there's nothing
-      // to compute a breakdown from — give the requested result full marks
-      // so it renders as the clear winner instead of a meaningless all-zero tie.
-      if (!computed.scores[winnerId]) computed.scores[winnerId] = 1;
-    } else {
-      winnerId = pickWinner(computed.scores, computed.earliestQuestion, computed.maxSingleWeight);
-    }
     var winnerScore = computed.scores[winnerId] || 1;
 
     var top4 = resultIds()
@@ -422,14 +542,52 @@
     quizApp.setAttribute("hidden", "");
     resultsApp.removeAttribute("hidden");
 
-    if (!forcedWinnerId) {
-      updateUrlWithResult(winnerId);
-      buzz(18);
-    }
-
     wireResultActions(winnerId, winner.name);
 
     window.scrollTo(0, 0);
+  }
+
+  function showResult(forcedWinnerId, opts) {
+    opts = opts || {};
+
+    var computed = computeScores();
+    var winnerId;
+    if (forcedWinnerId && forcedWinnerId in results) {
+      winnerId = forcedWinnerId;
+      // Direct-link view has no real answers behind it, so there's nothing
+      // to compute a breakdown from — give the requested result full marks
+      // so it renders as the clear winner instead of a meaningless all-zero tie.
+      if (!computed.scores[winnerId]) computed.scores[winnerId] = 1;
+    } else {
+      winnerId = pickWinner(computed.scores, computed.earliestQuestion, computed.maxSingleWeight);
+    }
+
+    var winner = results[winnerId];
+
+    // Shared links (?r=) skip the reveal entirely — the visitor didn't
+    // answer anything, so a 1.9s payoff animation for a result they didn't
+    // earn would just be confusing and slow. Instant render, no haptic,
+    // no sound, no URL rewrite (the URL already has ?r= in it).
+    if (forcedWinnerId) {
+      renderResultMarkup(winnerId, computed, opts);
+      return;
+    }
+
+    updateUrlWithResult(winnerId);
+
+    // Real completion (first run or a retake) without the visual flip:
+    // reduced-motion skips the animation but still fires haptic + sound —
+    // motion sensitivity and audio preference are unrelated settings.
+    if (!opts.animate || reducedMotion) {
+      buzz(18);
+      playRevealSound();
+      renderResultMarkup(winnerId, computed, opts);
+      return;
+    }
+
+    playReveal(winnerId, winner).then(function () {
+      renderResultMarkup(winnerId, computed, opts);
+    });
   }
 
   function wireResultActions(winnerId, winnerName) {

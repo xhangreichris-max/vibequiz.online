@@ -342,6 +342,23 @@ button {
   margin-bottom: 18px;
 }
 
+.quiz-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sound-toggle {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  color: var(--muted);
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  padding: 5px 10px;
+}
+
 /* Odometer question counter */
 .q-counter {
   display: inline-flex;
@@ -547,7 +564,9 @@ button {
   .question-card,
   .q-counter-track,
   .dot-trail span,
-  .progress-bar-fill {
+  .progress-bar-fill,
+  .reveal-card,
+  .reveal-flash {
     animation: none !important;
     transition-duration: 0.01ms !important;
   }
@@ -573,6 +592,112 @@ button {
 @keyframes result-in {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   Reveal card — plays before the result screen on a real completion.
+   Skipped entirely on shared (?r=) links and under reduced motion (JS
+   never adds .is-visible/.is-flipping in those cases; this file also
+   flattens it under the reduced-motion query below as a defense-in-depth).
+   ========================================================================== */
+
+.reveal-card {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  margin: 60px auto;
+  opacity: 0;
+  transform-style: preserve-3d;
+  perspective: 1200px;
+  transition: opacity 200ms ease-out, transform 440ms cubic-bezier(.4, .1, .3, 1);
+}
+
+.reveal-card.is-visible {
+  opacity: 1;
+  animation: reveal-wobble 220ms ease-in-out 3;
+}
+
+.reveal-card.is-flipping {
+  opacity: 1;
+  animation: none;
+  transform: rotateY(180deg) scale(1);
+}
+
+@keyframes reveal-wobble {
+  0%, 100% { transform: rotate(-1deg); }
+  50%      { transform: rotate(1deg); }
+}
+
+.reveal-card-back,
+.reveal-card-face {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-lg);
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+}
+
+.reveal-card-back {
+  background: linear-gradient(
+    135deg,
+    var(--p1) 0%,  var(--p1) 38%,
+    var(--p2) 38%, var(--p2) 68%,
+    var(--p3) 68%, var(--p3) 100%
+  );
+}
+
+.reveal-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+
+.reveal-card-face {
+  background: var(--card);
+  border: 1px solid var(--border);
+  transform: rotateY(180deg);
+}
+
+.reveal-eyebrow {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.reveal-name {
+  font-family: 'Fraunces', serif;
+  font-size: 26px;
+  line-height: 1.15;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.reveal-flash {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.reveal-flash.is-flashing {
+  animation: reveal-flash-fade 180ms ease-out;
+}
+
+@keyframes reveal-flash-fade {
+  0%   { opacity: 0.12; }
+  100% { opacity: 0; }
 }
 
 .vibe-fragments {
