@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{PAGE_TITLE}}</title>
+<meta name="description" content="{{META_DESCRIPTION}}">
+<link rel="canonical" href="{{CANONICAL_URL}}">
+
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="alternate icon" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#FAF6F0">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="{{OG_TITLE}}">
+<meta property="og:description" content="{{OG_DESCRIPTION}}">
+<meta property="og:url" content="{{OG_URL}}">
+<meta property="og:image" content="https://vibequiz.online/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{OG_TITLE}}">
+<meta name="twitter:description" content="{{OG_DESCRIPTION}}">
+<meta name="twitter:image" content="https://vibequiz.online/og-image.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+
+<script type="application/ld+json">{{JSON_LD}}</script>
+
+<!-- Replace with real GA4 ID -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-XXXXXXXXXX');
+</script>
+</head>
+<body>
+
+<header class="quiz-header">
+  <div class="wrap">
+    <a href="/" class="logo">vibequiz</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <h1 class="quiz-h1">{{H1}}</h1>
+  <p class="quiz-intro">{{INTRO}}</p>
+
+  <div id="quiz-app" data-slug="{{SLUG}}">
+    <noscript>
+      <p class="no-js-note">Enable JavaScript to take this quiz.</p>
+    </noscript>
+  </div>
+
+  <div id="results-app" hidden></div>
+
+  <section id="all-results">
+    <h2 class="visually-hidden">All Aesthetics</h2>
+    {{ALL_RESULTS_HTML}}
+  </section>
+
+  <article id="quiz-article">
+    {{ARTICLE_HTML}}
+  </article>
+
+  <section id="quiz-faq">
+    <h2>Frequently Asked Questions</h2>
+    {{FAQ_HTML}}
+  </section>
+</main>
+
+<footer class="site-footer">
+  <p class="footer-links">{{FOOTER_LINKS}}</p>
+  <p class="footer-domain">vibequiz.online</p>
+</footer>
+
+<script type="application/json" id="quiz-data">{{QUIZ_DATA_JSON}}</script>
+<script src="/quiz-engine.min.js" defer></script>
+</body>
+</html>

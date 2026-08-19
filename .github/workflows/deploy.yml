@@ -1,0 +1,40 @@
+name: Deploy
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Build site
+        run: python build.py
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Minify quiz-engine.js
+        run: |
+          npm install --no-save terser
+          npx terser quiz-engine.js --compress --mangle --output dist/quiz-engine.min.js
+
+      - name: Verify dist/ structure
+        run: |
+          echo "=== dist/ contents ===" && ls dist/
+          echo "=== quiz page check ===" && ls dist/aesthetic-quiz/
+
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
