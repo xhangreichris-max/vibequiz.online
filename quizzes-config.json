@@ -572,6 +572,11 @@
       "results": {
         "cottagecore": {
           "name": "Cottagecore",
+          "traits": [
+            "warm",
+            "romantic",
+            "restrained"
+          ],
           "emoji": "🌿",
           "palette": {
             "bg": [
@@ -602,6 +607,11 @@
         },
         "dark_academia": {
           "name": "Dark Academia",
+          "traits": [
+            "intellectual",
+            "nocturnal",
+            "romantic"
+          ],
           "emoji": "📚",
           "palette": {
             "bg": [
@@ -632,6 +642,11 @@
         },
         "y2k": {
           "name": "Y2K",
+          "traits": [
+            "loud",
+            "chaotic",
+            "warm"
+          ],
           "emoji": "💿",
           "palette": {
             "bg": [
@@ -662,6 +677,11 @@
         },
         "soft_girl": {
           "name": "Soft Girl",
+          "traits": [
+            "warm",
+            "adaptable",
+            "romantic"
+          ],
           "emoji": "🍓",
           "palette": {
             "bg": [
@@ -692,6 +712,11 @@
         },
         "grunge": {
           "name": "Grunge",
+          "traits": [
+            "intense",
+            "restrained",
+            "loyal"
+          ],
           "emoji": "🖤",
           "palette": {
             "bg": [
@@ -722,6 +747,11 @@
         },
         "coquette": {
           "name": "Coquette",
+          "traits": [
+            "romantic",
+            "precise",
+            "intense"
+          ],
           "emoji": "🎀",
           "palette": {
             "bg": [
@@ -752,6 +782,11 @@
         },
         "old_money": {
           "name": "Old Money",
+          "traits": [
+            "restrained",
+            "precise",
+            "intellectual"
+          ],
           "emoji": "🎾",
           "palette": {
             "bg": [
@@ -782,6 +817,11 @@
         },
         "indie_sleaze": {
           "name": "Indie Sleaze",
+          "traits": [
+            "chaotic",
+            "curious",
+            "adaptable"
+          ],
           "emoji": "📸",
           "palette": {
             "bg": [
@@ -812,6 +852,11 @@
         },
         "clean_girl": {
           "name": "Clean Girl",
+          "traits": [
+            "precise",
+            "restrained",
+            "adaptable"
+          ],
           "emoji": "✨",
           "palette": {
             "bg": [
@@ -842,6 +887,11 @@
         },
         "cyber_futurism": {
           "name": "Cyber Futurism",
+          "traits": [
+            "intellectual",
+            "precise",
+            "nocturnal"
+          ],
           "emoji": "🖥",
           "palette": {
             "bg": [
@@ -1479,6 +1529,11 @@
       "results": {
         "cottagecore": {
           "name": "Cottagecore",
+          "traits": [
+            "warm",
+            "romantic",
+            "restrained"
+          ],
           "emoji": "🌿",
           "palette": {
             "bg": [
@@ -1509,6 +1564,11 @@
         },
         "dark_academia": {
           "name": "Dark Academia",
+          "traits": [
+            "intellectual",
+            "nocturnal",
+            "romantic"
+          ],
           "emoji": "📚",
           "palette": {
             "bg": [
@@ -1539,6 +1599,11 @@
         },
         "y2k": {
           "name": "Y2K",
+          "traits": [
+            "loud",
+            "chaotic",
+            "warm"
+          ],
           "emoji": "💿",
           "palette": {
             "bg": [
@@ -1569,6 +1634,11 @@
         },
         "soft_girl": {
           "name": "Soft Girl",
+          "traits": [
+            "warm",
+            "adaptable",
+            "romantic"
+          ],
           "emoji": "🍓",
           "palette": {
             "bg": [
@@ -1599,6 +1669,11 @@
         },
         "grunge": {
           "name": "Grunge",
+          "traits": [
+            "intense",
+            "restrained",
+            "loyal"
+          ],
           "emoji": "🖤",
           "palette": {
             "bg": [
@@ -1629,6 +1704,11 @@
         },
         "coquette": {
           "name": "Coquette",
+          "traits": [
+            "romantic",
+            "precise",
+            "intense"
+          ],
           "emoji": "🎀",
           "palette": {
             "bg": [
@@ -1659,6 +1739,11 @@
         },
         "old_money": {
           "name": "Old Money",
+          "traits": [
+            "restrained",
+            "precise",
+            "intellectual"
+          ],
           "emoji": "🎾",
           "palette": {
             "bg": [
@@ -1689,6 +1774,11 @@
         },
         "indie_sleaze": {
           "name": "Indie Sleaze",
+          "traits": [
+            "chaotic",
+            "curious",
+            "adaptable"
+          ],
           "emoji": "📸",
           "palette": {
             "bg": [
@@ -1719,6 +1809,11 @@
         },
         "clean_girl": {
           "name": "Clean Girl",
+          "traits": [
+            "precise",
+            "restrained",
+            "adaptable"
+          ],
           "emoji": "✨",
           "palette": {
             "bg": [
@@ -1749,6 +1844,11 @@
         },
         "cyber_futurism": {
           "name": "Cyber Futurism",
+          "traits": [
+            "intellectual",
+            "precise",
+            "nocturnal"
+          ],
           "emoji": "🖥",
           "palette": {
             "bg": [
@@ -2290,6 +2390,11 @@
       "results": {
         "pizza": {
           "name": "Pizza",
+          "traits": [
+            "warm",
+            "loud",
+            "adaptable"
+          ],
           "emoji": "🍕",
           "palette": {
             "bg": [
@@ -2320,6 +2425,11 @@
         },
         "sushi": {
           "name": "Sushi",
+          "traits": [
+            "precise",
+            "intellectual",
+            "restrained"
+          ],
           "emoji": "🍣",
           "palette": {
             "bg": [
@@ -2350,6 +2460,11 @@
         },
         "ramen": {
           "name": "Ramen",
+          "traits": [
+            "warm",
+            "loyal",
+            "intense"
+          ],
           "emoji": "🍜",
           "palette": {
             "bg": [
@@ -2380,6 +2495,10 @@
         },
         "tacos": {
           "name": "Tacos",
+          "traits": [
+            "chaotic",
+            "adaptable"
+          ],
           "emoji": "🌮",
           "palette": {
             "bg": [
@@ -2410,6 +2529,11 @@
         },
         "pasta": {
           "name": "Pasta",
+          "traits": [
+            "romantic",
+            "loyal",
+            "precise"
+          ],
           "emoji": "🍝",
           "palette": {
             "bg": [
@@ -2440,6 +2564,11 @@
         },
         "salad": {
           "name": "Salad",
+          "traits": [
+            "precise",
+            "intense",
+            "restrained"
+          ],
           "emoji": "🥗",
           "palette": {
             "bg": [
@@ -2470,6 +2599,10 @@
         },
         "burger": {
           "name": "Burger",
+          "traits": [
+            "restrained",
+            "loyal"
+          ],
           "emoji": "🍔",
           "palette": {
             "bg": [
@@ -2500,6 +2633,11 @@
         },
         "dumplings": {
           "name": "Dumplings",
+          "traits": [
+            "warm",
+            "loyal",
+            "restrained"
+          ],
           "emoji": "🥟",
           "palette": {
             "bg": [
@@ -3041,6 +3179,11 @@
       "results": {
         "owl": {
           "name": "Owl",
+          "traits": [
+            "intellectual",
+            "nocturnal",
+            "restrained"
+          ],
           "emoji": "🦉",
           "palette": {
             "bg": [
@@ -3071,6 +3214,11 @@
         },
         "crow": {
           "name": "Crow",
+          "traits": [
+            "curious",
+            "intellectual",
+            "adaptable"
+          ],
           "emoji": "🐦‍⬛",
           "palette": {
             "bg": [
@@ -3101,6 +3249,11 @@
         },
         "hummingbird": {
           "name": "Hummingbird",
+          "traits": [
+            "chaotic",
+            "intense",
+            "loud"
+          ],
           "emoji": "🌺",
           "palette": {
             "bg": [
@@ -3131,6 +3284,11 @@
         },
         "flamingo": {
           "name": "Flamingo",
+          "traits": [
+            "precise",
+            "adaptable",
+            "loud"
+          ],
           "emoji": "🦩",
           "palette": {
             "bg": [
@@ -3161,6 +3319,10 @@
         },
         "penguin": {
           "name": "Penguin",
+          "traits": [
+            "loyal",
+            "warm"
+          ],
           "emoji": "🐧",
           "palette": {
             "bg": [
@@ -3191,6 +3353,11 @@
         },
         "hawk": {
           "name": "Hawk",
+          "traits": [
+            "precise",
+            "intellectual",
+            "loyal"
+          ],
           "emoji": "🦅",
           "palette": {
             "bg": [
@@ -3221,6 +3388,10 @@
         },
         "sparrow": {
           "name": "Sparrow",
+          "traits": [
+            "adaptable",
+            "loyal"
+          ],
           "emoji": "🪶",
           "palette": {
             "bg": [
@@ -3251,6 +3422,11 @@
         },
         "peacock": {
           "name": "Peacock",
+          "traits": [
+            "precise",
+            "intellectual",
+            "intense"
+          ],
           "emoji": "🦚",
           "palette": {
             "bg": [
@@ -3792,6 +3968,11 @@
       "results": {
         "tiramisu": {
           "name": "Tiramisu",
+          "traits": [
+            "romantic",
+            "intense",
+            "precise"
+          ],
           "emoji": "☕",
           "palette": {
             "bg": [
@@ -3822,6 +4003,11 @@
         },
         "brownie": {
           "name": "Brownie",
+          "traits": [
+            "restrained",
+            "loyal",
+            "warm"
+          ],
           "emoji": "🍫",
           "palette": {
             "bg": [
@@ -3852,6 +4038,10 @@
         },
         "macaron": {
           "name": "Macaron",
+          "traits": [
+            "precise",
+            "intellectual"
+          ],
           "emoji": "🎀",
           "palette": {
             "bg": [
@@ -3882,6 +4072,11 @@
         },
         "cheesecake": {
           "name": "Cheesecake",
+          "traits": [
+            "warm",
+            "loyal",
+            "intense"
+          ],
           "emoji": "🍰",
           "palette": {
             "bg": [
@@ -3912,6 +4107,11 @@
         },
         "soft_serve": {
           "name": "Soft Serve",
+          "traits": [
+            "adaptable",
+            "warm",
+            "intellectual"
+          ],
           "emoji": "🍦",
           "palette": {
             "bg": [
@@ -3942,6 +4142,11 @@
         },
         "creme_brulee": {
           "name": "Crème Brûlée",
+          "traits": [
+            "precise",
+            "restrained",
+            "intense"
+          ],
           "emoji": "🔥",
           "palette": {
             "bg": [
@@ -3972,6 +4177,10 @@
         },
         "cinnamon_roll": {
           "name": "Cinnamon Roll",
+          "traits": [
+            "warm",
+            "loyal"
+          ],
           "emoji": "🌀",
           "palette": {
             "bg": [
@@ -4002,6 +4211,11 @@
         },
         "dark_chocolate_truffle": {
           "name": "Dark Chocolate Truffle",
+          "traits": [
+            "intense",
+            "restrained",
+            "precise"
+          ],
           "emoji": "🖤",
           "palette": {
             "bg": [
