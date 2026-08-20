@@ -1,6 +1,7 @@
 /* ==========================================================================
    vibequiz.online — design system
-   Fonts: Fraunces (display) + Inter (body). No frameworks, no images.
+   Fonts: Bodoni Moda (display, never below 20px) + Space Grotesk (body).
+   No frameworks, no images.
    ========================================================================== */
 
 * {
@@ -22,8 +23,8 @@
   --radius-md: 14px;
   --radius-lg: 20px;
   --max-width: 480px;
-  --font-voice: 'Fraunces', serif;
-  --font-body: 'Inter', sans-serif;
+  --font-display: 'Bodoni Moda', 'Didot', Georgia, serif;
+  --font-body: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif;
 }
 
 html {
@@ -33,13 +34,18 @@ html {
 body {
   background: var(--bg);
   color: var(--ink);
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
 
+/* Display default for headings. Bodoni Moda's thin strokes disappear
+   below 20px, so any h1/h2/h3/.display element that renders smaller than
+   that gets an explicit font-family: var(--font-body) override at its own
+   selector — see the six below-20px overrides throughout this file. New
+   headings should default to display and get corrected if they land small. */
 h1, h2, h3, .display {
-  font-family: 'Fraunces', serif;
+  font-family: var(--font-display);
   font-weight: 600;
 }
 
@@ -59,7 +65,7 @@ a {
 }
 
 button {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   cursor: pointer;
 }
 
@@ -154,18 +160,27 @@ button {
 }
 
 .moodboard-label {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   font-size: 10px;
   letter-spacing: 0.1em;
-  font-weight: 600;
+  font-weight: 700;
   margin-bottom: 4px;
 }
 
+/* RESULT NAME — 42px desktop / 32px mobile, not larger. Constrained by
+   the 220x220 reveal card and the 220px moodboard header. */
 .moodboard-name {
-  font-family: 'Fraunces', serif;
-  font-size: 36px;
-  line-height: 1.0;
+  font-family: var(--font-display);
+  font-size: 32px;
+  line-height: 1.05;
   font-weight: 600;
+}
+
+@media (min-width: 800px) {
+  .moodboard-name {
+    font-size: 42px;
+    line-height: 1.0;
+  }
 }
 
 /* ==========================================================================
@@ -177,7 +192,7 @@ button {
 }
 
 .logo {
-  font-family: 'Fraunces', serif;
+  font-family: var(--font-display);
   font-size: 28px;
   color: var(--ink);
   text-transform: lowercase;
@@ -219,7 +234,9 @@ button {
 }
 
 .flagship-card .quiz-title {
+  font-family: var(--font-display);
   font-size: 24px;
+  font-weight: 600;
 }
 
 .flagship-card .quiz-subtitle {
@@ -267,7 +284,9 @@ button {
 }
 
 .secondary-card .quiz-title {
+  font-family: var(--font-body);
   font-size: 16px;
+  font-weight: 600;
 }
 
 .secondary-card .quiz-subtitle {
@@ -284,8 +303,10 @@ button {
   padding-top: 32px;
 }
 
+/* 18px — below the 20px floor, so this stays Space Grotesk even though
+   it's an h2 (the blanket h1/h2/h3 rule defaults it to display). */
 .homepage-content h2 {
-  font-family: var(--font-voice);
+  font-family: var(--font-body);
   font-size: 18px;
   color: var(--ink);
   margin: 32px 0 10px;
@@ -332,7 +353,7 @@ button {
 }
 
 .not-found-message {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   font-size: 14px;
   color: var(--muted);
   margin-top: 8px;
@@ -365,18 +386,19 @@ button {
   border: 1px solid var(--border);
   border-radius: 20px;
   color: var(--muted);
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   font-size: 10px;
   letter-spacing: 0.06em;
   padding: 5px 10px;
 }
 
-/* Odometer question counter */
+/* Odometer question counter — 18px, below the 20px floor, so Space
+   Grotesk even though it visually reads as a heading. */
 .q-counter {
   display: inline-flex;
   align-items: baseline;
   gap: 4px;
-  font-family: 'Fraunces', serif;
+  font-family: var(--font-body);
   font-size: 18px;
   color: var(--ink);
 }
@@ -400,7 +422,7 @@ button {
 }
 
 .q-counter-total {
-  font-family: 'Fraunces', serif;
+  font-family: var(--font-body);
   font-size: 18px;
   color: var(--ink);
 }
@@ -409,7 +431,7 @@ button {
   background: transparent;
   border: none;
   color: var(--muted);
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   font-size: 12px;
   padding: 4px 0;
 }
@@ -484,11 +506,21 @@ button {
               opacity 300ms ease-out;
 }
 
+/* QUESTION TEXT — 26px/1.20 mobile, 34px/1.15 desktop. Weight 600 per
+   the confirmed mapping (overrides the reference doc's 500). */
 .question-text {
-  font-family: 'Fraunces', serif;
-  font-size: 22px;
-  line-height: 1.35;
+  font-family: var(--font-display);
+  font-size: 26px;
+  line-height: 1.20;
+  font-weight: 600;
   margin-bottom: 20px;
+}
+
+@media (min-width: 800px) {
+  .question-text {
+    font-size: 34px;
+    line-height: 1.15;
+  }
 }
 
 .options {
@@ -526,8 +558,10 @@ button {
   border-radius: var(--radius-sm);
   padding: 14px 16px;
   background: var(--card);
-  font-family: 'Inter', sans-serif;
-  font-size: 14px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.45;
+  font-weight: 500;
   color: var(--ink);
   text-align: left;
   transform: scale(1);
@@ -664,10 +698,11 @@ button {
 }
 
 .reveal-label {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   font-size: 11px;
-  letter-spacing: 0.1em;
-  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.12em;
+  font-weight: 700;
   color: #fff;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
 }
@@ -679,16 +714,18 @@ button {
 }
 
 .reveal-eyebrow {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   font-size: 10px;
   letter-spacing: 0.1em;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--muted);
   margin-bottom: 8px;
 }
 
+/* 26px — kept flat (no desktop/mobile split), constrained by the 220x220
+   reveal card. */
 .reveal-name {
-  font-family: 'Fraunces', serif;
+  font-family: var(--font-display);
   font-size: 26px;
   line-height: 1.15;
   font-weight: 600;
@@ -720,12 +757,13 @@ button {
   font-size: 10px;
   letter-spacing: 0.1em;
   color: var(--muted);
-  font-weight: 600;
+  font-weight: 700;
   margin-bottom: 10px;
 }
 
+/* 15px — below the 20px floor, so Space Grotesk despite the display feel. */
 .fragment-line {
-  font-family: 'Fraunces', serif;
+  font-family: var(--font-body);
   font-size: 15px;
   color: var(--ink);
   line-height: 1.8;
@@ -775,7 +813,7 @@ button {
   font-size: 10px;
   letter-spacing: 0.1em;
   color: var(--muted);
-  font-weight: 600;
+  font-weight: 700;
   margin-bottom: 12px;
 }
 
@@ -870,7 +908,9 @@ button {
   display: block;
 }
 
+/* 16px — below the 20px floor, so Space Grotesk despite being an h3. */
 #all-results h3 {
+  font-family: var(--font-body);
   font-size: 16px;
   margin-top: 20px;
 }
@@ -895,12 +935,24 @@ button {
   border-top: 1px solid var(--border);
 }
 
+/* ARTICLE H2 — 22px mobile, 26px desktop. 20px flat was too close to
+   body copy to create hierarchy. */
 #quiz-article h2, #quiz-faq h2 {
-  font-size: 20px;
+  font-size: 22px;
+  line-height: 1.25;
   margin-bottom: 16px;
 }
 
+@media (min-width: 800px) {
+  #quiz-article h2, #quiz-faq h2 {
+    font-size: 26px;
+    line-height: 1.20;
+  }
+}
+
+/* 16px — below the 20px floor, so Space Grotesk despite being an h3. */
 #quiz-article h3 {
+  font-family: var(--font-body);
   font-size: 16px;
   margin-top: 20px;
   margin-bottom: 6px;
@@ -916,8 +968,12 @@ button {
   margin-top: 16px;
 }
 
+/* FAQ QUESTION — bumped 14px -> 16px; at 14px it was the same size as
+   its own answer text. Below the 20px floor, so Space Grotesk. */
 .faq-item h3 {
-  font-size: 14px;
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 600;
   margin-bottom: 4px;
 }
 
@@ -928,7 +984,7 @@ button {
 }
 
 .footer-links {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
   font-size: 12px;
   color: var(--muted);
   margin-bottom: 8px;
@@ -964,13 +1020,13 @@ button {
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   background: var(--card);
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
 }
 
 .passport-strip-title {
   font-size: 11px;
   letter-spacing: 0.08em;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--ink);
 }
 
@@ -1011,7 +1067,7 @@ button {
   justify-content: space-between;
   font-size: 10px;
   letter-spacing: 0.1em;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--muted);
   margin-bottom: 10px;
 }
@@ -1104,11 +1160,12 @@ button {
   border-radius: var(--radius-lg);
   padding: 28px 22px;
   text-align: center;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body);
 }
 
+/* 15px — below the 20px floor, so Space Grotesk. */
 .archetype-kicker {
-  font-family: 'Fraunces', serif;
+  font-family: var(--font-body);
   font-size: 15px;
   font-weight: 600;
   line-height: 1.3;
@@ -1156,8 +1213,8 @@ button {
 }
 
 .archetype-name {
-  font-family: 'Fraunces', serif;
-  font-size: 24px;
+  font-family: var(--font-display);
+  font-size: 28px;
   font-weight: 600;
   letter-spacing: 0.02em;
   margin-bottom: 10px;
