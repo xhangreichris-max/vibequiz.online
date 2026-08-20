@@ -315,9 +315,9 @@ button {
 
 .homepage-content p {
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: 16px;
   color: var(--muted);
-  line-height: 1.75;
+  line-height: 1.70;
   margin: 0;
 }
 
@@ -857,9 +857,9 @@ button {
 
 .result-description {
   padding: 4px 20px 0;
-  font-size: 14px;
+  font-size: 15px;
   color: var(--ink);
-  line-height: 1.7;
+  line-height: 1.70;
 }
 
 .action-row {
@@ -920,9 +920,9 @@ button {
 }
 
 #all-results p {
-  font-size: 13px;
+  font-size: 15px;
   color: var(--ink);
-  line-height: 1.6;
+  line-height: 1.65;
   margin-top: 6px;
 }
 
@@ -958,9 +958,26 @@ button {
   margin-bottom: 6px;
 }
 
-#quiz-article p, #quiz-faq p {
-  font-size: 14px;
-  line-height: 1.7;
+/* ARTICLE BODY — 16px mobile, 17px desktop. This was the actual source
+   of the "reads small and dense" complaint that started Phase 5. */
+#quiz-article p {
+  font-size: 16px;
+  line-height: 1.70;
+  font-weight: 400;
+  color: var(--ink);
+}
+
+@media (min-width: 800px) {
+  #quiz-article p {
+    font-size: 17px;
+  }
+}
+
+/* FAQ ANSWER — flat 16px, no desktop bump. */
+#quiz-faq p {
+  font-size: 16px;
+  line-height: 1.70;
+  font-weight: 400;
   color: var(--ink);
 }
 
