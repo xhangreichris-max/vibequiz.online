@@ -49,11 +49,27 @@ def fill(template, tokens):
 # Section renderers (pre-rendered raw HTML, crawlable with JS disabled)
 # --------------------------------------------------------------------------
 
-def render_article(article):
-    parts = ["<h2>About This Quiz</h2>"]
-    for section in article:
-        parts.append(f"<h3>{esc(section['heading'])}</h3>")
-        parts.append(f"<p>{esc(section['body'])}</p>")
+def render_article(article, pull_quote=None):
+    # Section headings are real H2s — they're the actual content headings
+    # and need that semantic weight for search. "About This Quiz" is a
+    # section label, not a heading, so it's a small styled span instead of
+    # competing with the real H2s below it.
+    parts = ['<span class="article-kicker">About This Quiz</span>']
+    parts.append('<div class="article-grid">')
+    for i, section in enumerate(article, start=1):
+        number = f"{i:02d}"
+        paragraphs = [p for p in section["body"].split("\n\n") if p.strip()]
+        parts.append('<section class="article-section">')
+        parts.append(f'<span class="section-number">{number}</span>')
+        parts.append('<div class="section-body">')
+        parts.append(f"<h2>{esc(section['heading'])}</h2>")
+        for para in paragraphs:
+            parts.append(f"<p>{esc(para)}</p>")
+        parts.append("</div>")
+        parts.append("</section>")
+        if i == 2 and pull_quote:
+            parts.append(f'<blockquote class="pull-quote" aria-hidden="true">{esc(pull_quote)}</blockquote>')
+    parts.append("</div>")
     return "\n".join(parts)
 
 
@@ -70,9 +86,10 @@ def render_all_results(results):
 
 def render_faq(faq):
     parts = []
-    for item in faq:
+    for i, item in enumerate(faq, start=1):
+        number = f"{i:02d}"
         parts.append('<div class="faq-item">')
-        parts.append(f"<h3>{esc(item['question'])}</h3>")
+        parts.append(f'<h3><span class="faq-number">{number}</span>{esc(item["question"])}</h3>')
         parts.append(f"<p>{esc(item['answer'])}</p>")
         parts.append("</div>")
     return "\n".join(parts)
@@ -209,7 +226,7 @@ def build_quiz_page(quiz, site, footer_links_html, template):
         "INTRO": esc(quiz["intro"]),
         "SLUG": esc(quiz["slug"]),
         "ALL_RESULTS_HTML": render_all_results(quiz["results"]),
-        "ARTICLE_HTML": render_article(quiz["article"]),
+        "ARTICLE_HTML": render_article(quiz["article"], quiz.get("pull_quote")),
         "FAQ_HTML": render_faq(quiz["faq"]),
         "QUIZ_DATA_JSON": build_quiz_data(quiz),
         "FOOTER_LINKS": footer_links_html,

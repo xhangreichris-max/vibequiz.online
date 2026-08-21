@@ -930,17 +930,86 @@ button {
    Article / FAQ (always pre-rendered, always visible)
    ========================================================================== */
 
-#quiz-article, #quiz-faq {
+#quiz-faq {
   padding: 32px 20px;
   border-top: 1px solid var(--border);
 }
 
+/* #quiz-article breaks out of <main class="wrap">'s max-width so the
+   article can use a wider desktop measure (776px via .article-grid)
+   than the quiz-taking area (which stays inside .wrap on purpose —
+   splitting the physical answer tiles across a wide screen adds eye
+   travel for no gain). template.html is out of scope for 5b, so this
+   is a pure-CSS breakout rather than a new wrapper element. */
+#quiz-article {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  margin-left: -50vw;
+  padding: 32px 0;
+  border-top: 1px solid var(--border);
+}
+
+.article-kicker {
+  display: block;
+  max-width: 776px;
+  margin: 0 auto;
+  padding: 0 20px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.10em;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+
+.article-grid {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 640px);
+  column-gap: 40px;
+  max-width: 776px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+@media (max-width: 800px) {
+  .article-grid {
+    grid-template-columns: 1fr;
+    row-gap: 0;
+  }
+}
+
+.article-section {
+  display: contents;
+}
+
+/* ARTICLE SECTION NUMBER — 40px mobile, 64px desktop. Hangs in the left
+   margin column on desktop; sits above its heading once the grid
+   collapses to one column below 800px. */
+.section-number {
+  font-family: var(--font-display);
+  font-size: 40px;
+  line-height: 0.85;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+@media (min-width: 800px) {
+  .section-number {
+    font-size: 64px;
+  }
+}
+
 /* ARTICLE H2 — 22px mobile, 26px desktop. 20px flat was too close to
-   body copy to create hierarchy. */
+   body copy to create hierarchy. Rule sits 16px below the heading text,
+   full width of the content column, in the quiz's accent colour. */
 #quiz-article h2, #quiz-faq h2 {
   font-size: 22px;
   line-height: 1.25;
-  margin-bottom: 16px;
+  padding-bottom: 16px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--accent);
 }
 
 @media (min-width: 800px) {
@@ -950,12 +1019,22 @@ button {
   }
 }
 
-/* 16px — below the 20px floor, so Space Grotesk despite being an h3. */
-#quiz-article h3 {
-  font-family: var(--font-body);
-  font-size: 16px;
-  margin-top: 20px;
-  margin-bottom: 6px;
+/* Drop cap — ::first-letter only, never float:left on the paragraph
+   itself (float causes wrapping bugs on narrow screens and confuses
+   some screen readers). */
+.section-body > p:first-of-type::first-letter {
+  font-family: var(--font-display);
+  font-size: 3.4em;
+  font-weight: 600;
+  line-height: 0.82;
+  float: left;
+  padding: 0.06em 0.08em 0 0;
+}
+
+@media (max-width: 800px) {
+  .section-body > p:first-of-type::first-letter {
+    font-size: 2.8em;
+  }
 }
 
 /* ARTICLE BODY — 16px mobile, 17px desktop. This was the actual source
@@ -965,12 +1044,42 @@ button {
   line-height: 1.70;
   font-weight: 400;
   color: var(--ink);
+  margin-bottom: 14px;
 }
 
 @media (min-width: 800px) {
   #quiz-article p {
     font-size: 17px;
   }
+}
+
+.pull-quote {
+  grid-column: 1 / -1;
+  position: relative;
+  font-family: var(--font-display);
+  font-size: 24px;
+  line-height: 1.35;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 32px 0;
+  padding-left: 24px;
+}
+
+.pull-quote::before {
+  content: "\201C";
+  position: absolute;
+  left: 0;
+  top: -6px;
+  font-size: 1.5em;
+  color: var(--accent-dark);
+}
+
+.faq-number {
+  display: inline-block;
+  min-width: 24px;
+  margin-right: 10px;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent-dark);
 }
 
 /* FAQ ANSWER — flat 16px, no desktop bump. */
