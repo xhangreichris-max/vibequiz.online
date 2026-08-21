@@ -610,6 +610,82 @@ main.wrap > * {
   gap: 10px;
 }
 
+/* ==========================================================================
+   5d — question layout templates, cycled by index % 4 via the
+   q-layout-{a,b,c,d} class quiz-engine.js writes onto #quiz-app.
+   Composition, type scale, and alignment only — no colour changes between
+   questions. Answer-tile fill/border/radius (per-quiz, from 5c) and every
+   interaction transition are untouched here; only .question-card/.q-counter
+   geometry changes.
+   ========================================================================== */
+
+/* Template A (index % 4 === 0) — the existing default composition. No
+   overrides: label above, question left-aligned at standard size. */
+
+/* Template B (index % 4 === 1) — no word label, larger centred question,
+   more vertical space. The numeric counter ("04 / 12") stays visible;
+   only the VIBE/LOOK/COURSE word from 5c is hidden. */
+#quiz-app.q-layout-b .q-counter::before {
+  content: none;
+}
+
+#quiz-app.q-layout-b .question-text {
+  font-size: 32px;
+  text-align: center;
+  margin-top: 32px;
+  margin-bottom: 36px;
+}
+
+@media (min-width: 800px) {
+  #quiz-app.q-layout-b .question-text {
+    font-size: 42px;
+    margin-top: 48px;
+    margin-bottom: 44px;
+  }
+}
+
+/* Template C (index % 4 === 2) — label stays, question left, accent rule
+   underneath the question. */
+#quiz-app.q-layout-c .question-text {
+  padding-bottom: 20px;
+  border-bottom: var(--rule) solid var(--accent);
+}
+
+/* Template D (index % 4 === 3) — oversized hanging question number beside
+   the question, generated from data-qnum via CSS content (no new DOM
+   node). Mobile-first: below 800px this template is intentionally
+   unstyled and falls back to Template A's plain stacked arrangement — the
+   hanging number does not fit on a phone. */
+@media (min-width: 800px) {
+  #quiz-app.q-layout-d .q-counter::before {
+    content: none;
+  }
+  #quiz-app.q-layout-d .q-counter {
+    font-size: 13px;
+    opacity: 0.6;
+  }
+  #quiz-app.q-layout-d .question-card {
+    display: grid;
+    grid-template-columns: 88px 1fr;
+    column-gap: 24px;
+    align-items: start;
+  }
+  #quiz-app.q-layout-d .question-card::before {
+    content: attr(data-qnum);
+    grid-column: 1;
+    grid-row: 1 / -1;
+    font-family: var(--font-display);
+    font-size: 64px;
+    line-height: 0.85;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  #quiz-app.q-layout-d .question-text,
+  #quiz-app.q-layout-d .options {
+    grid-column: 2;
+  }
+}
+
 /* Idle float — CSS only, offloaded to the compositor. Amplitude stays
    tiny (<=3px, <=0.4deg) on purpose; more than this reads as broken
    rather than alive. Paused during press/select via animation-play-state. */

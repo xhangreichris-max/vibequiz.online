@@ -352,6 +352,12 @@
     var dotCount = Math.min(totalQuestions, 12);
     var barPercent = (idx / totalQuestions) * 100;
 
+    // 5d — four rotating compositions, cycled by index. Lives on #quiz-app
+    // (not .question-card, which the reference specified) because the
+    // topbar's .q-counter that some templates restyle is a sibling of
+    // .question-card, not a descendant of it.
+    quizApp.className = "q-layout-" + "abcd"[idx % 4];
+
     var dotsHtml = "";
     for (var d = 0; d < dotCount; d++) {
       var filled = state.answers[d] !== null || d < idx;
@@ -392,7 +398,7 @@
       "</div>" +
       '<div class="progress-bar-track"><div class="progress-bar-fill" style="width:' + barPercent + '%"></div></div>' +
       '<div class="dot-trail">' + dotsHtml + "</div>" +
-      '<div class="question-card is-entered">' +
+      '<div class="question-card is-entered" data-qnum="' + progressLabel + '">' +
       '<div class="question-text">' + escapeHtml(q.text) + "</div>" +
       '<div class="options">' + optionsHtml + "</div>" +
       "</div>";
