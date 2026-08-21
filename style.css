@@ -25,6 +25,51 @@
   --max-width: 480px;
   --font-display: 'Bodoni Moda', 'Didot', Georgia, serif;
   --font-body: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif;
+
+  /* Per-quiz identity (5c). Defaults match aesthetic-quiz so pages with
+     no #quiz-app in the DOM (homepage, 404) render the same as before. */
+  --radius: 10px;
+  --rule: 1px;
+}
+
+/* ==========================================================================
+   Per-quiz art direction (5c) — keyed off the data-slug attribute that
+   build.py already writes onto #quiz-app (data-slug="{{SLUG}}"). No body
+   class exists to hook into (template.html is out of this phase's scope),
+   so :root:has() reaches up from that descendant to retheme the whole
+   document, including the background, which a sibling combinator alone
+   could not reach. Exact-match attribute selectors only — aesthetic-quiz
+   is a literal prefix of aesthetic-quiz-clothing's slug, so ^= would leak
+   aesthetic's tokens onto the clothing quiz. */
+:root:has(#quiz-app[data-slug="aesthetic-quiz"]) {
+  --bg: #FAF6F0;
+  --accent: #8E79C9;
+  --radius: 10px;
+  --rule: 1px;
+}
+:root:has(#quiz-app[data-slug="aesthetic-quiz-clothing"]) {
+  --bg: #F6F4F1;
+  --accent: #B53A62;
+  --radius: 2px;
+  --rule: 1px;
+}
+:root:has(#quiz-app[data-slug="what-food-am-i"]) {
+  --bg: #FDF7EE;
+  --accent: #E56B3F;
+  --radius: 16px;
+  --rule: 2px;
+}
+:root:has(#quiz-app[data-slug="what-bird-am-i"]) {
+  --bg: #F4F6F1;
+  --accent: #72845C;
+  --radius: 4px;
+  --rule: 1px;
+}
+:root:has(#quiz-app[data-slug="what-dessert-am-i"]) {
+  --bg: #FCF4F5;
+  --accent: #C45A83;
+  --radius: 20px;
+  --rule: 2px;
 }
 
 html {
@@ -73,6 +118,23 @@ button {
   max-width: var(--max-width);
   margin: 0 auto;
   padding: 0 20px;
+}
+
+/* Quiz-page main only. Scoped to main.wrap (not the shared .wrap class
+   header/footer/homepage also use) so #quiz-article can break out to
+   near-full-viewport width without a wrapper element in template.html.
+   Grid tracks size off main.wrap's own rendered box, never off vw units,
+   so this is safe under a classic (non-overlay) scrollbar that the
+   previous width:100vw/margin-left:-50vw approach was not. */
+main.wrap {
+  max-width: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr min(calc(var(--max-width) - 40px), calc(100% - 40px)) 1fr;
+}
+
+main.wrap > * {
+  grid-column: 2;
 }
 
 /* ==========================================================================
@@ -410,6 +472,25 @@ button {
   position: relative;
 }
 
+/* Per-quiz label vocabulary (5c). Lives on .q-counter's ::before, not
+   .q-counter-track's, so the label stays put while the digit rolls —
+   putting it inside the track would drag static text through the same
+   slot-machine transform on every question change. quiz-engine.js is out
+   of this phase's scope, so the prefix is pure CSS content off the same
+   data-slug attribute the theme tokens use, not a new DOM node. 18px
+   .q-counter text clears the 14px floor for accent-coloured labels. */
+#quiz-app[data-slug="aesthetic-quiz"] .q-counter::before { content: "VIBE"; }
+#quiz-app[data-slug="aesthetic-quiz-clothing"] .q-counter::before { content: "LOOK"; }
+#quiz-app[data-slug="what-food-am-i"] .q-counter::before { content: "COURSE"; }
+#quiz-app[data-slug="what-bird-am-i"] .q-counter::before { content: "FIELD NOTE"; }
+#quiz-app[data-slug="what-dessert-am-i"] .q-counter::before { content: "COURSE"; }
+
+#quiz-app[data-slug] .q-counter::before {
+  color: var(--accent);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
 .q-counter-digit {
   display: block;
   height: 1.1em;
@@ -555,7 +636,7 @@ button {
   width: 100%;
   min-height: 52px;
   border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius);
   padding: 14px 16px;
   background: var(--card);
   font-family: var(--font-body);
@@ -568,6 +649,37 @@ button {
   transition: transform 180ms cubic-bezier(.2, 1.4, .3, 1),
               opacity 180ms ease-out,
               border-color 120ms ease-out;
+}
+
+/* Per-quiz resting-state tile treatment (5c). Radius already varies via
+   --radius above; these only touch fill/border/padding. Every
+   background/border override is gated :not(.is-selected) so the shared
+   selected-state feedback (border-color: var(--accent); background:
+   #F0EBF8) always wins once a tile is chosen — interaction physics stay
+   identical across all five quizzes; only the resting look differs. */
+#quiz-app[data-slug="aesthetic-quiz-clothing"] .answer-tile:not(.is-selected) {
+  background: transparent;
+  border-color: var(--border);
+}
+#quiz-app[data-slug="aesthetic-quiz-clothing"] .answer-tile {
+  padding: 10px 16px;
+}
+
+#quiz-app[data-slug="what-food-am-i"] .answer-tile:not(.is-selected) {
+  background: rgba(229, 107, 63, 0.06);
+}
+#quiz-app[data-slug="what-food-am-i"] .answer-tile {
+  padding: 18px 20px;
+}
+
+#quiz-app[data-slug="what-bird-am-i"] .answer-tile:not(.is-selected) {
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+}
+
+#quiz-app[data-slug="what-dessert-am-i"] .answer-tile:not(.is-selected) {
+  background: rgba(196, 90, 131, 0.08);
+  border-color: rgba(196, 90, 131, 0.18);
 }
 
 .answer-tile.is-pressing {
@@ -942,12 +1054,9 @@ button {
    travel for no gain). template.html is out of scope for 5b, so this
    is a pure-CSS breakout rather than a new wrapper element. */
 #quiz-article {
-  width: 100vw;
-  position: relative;
-  left: 50%;
-  margin-left: -50vw;
+  grid-column: 1 / -1;
   padding: 32px 0;
-  border-top: 1px solid var(--border);
+  border-top: var(--rule) solid var(--border);
 }
 
 .article-kicker {
@@ -992,7 +1101,7 @@ button {
   font-size: 40px;
   line-height: 0.85;
   font-weight: 700;
-  color: var(--ink);
+  color: var(--accent);
 }
 
 @media (min-width: 800px) {
@@ -1009,7 +1118,7 @@ button {
   line-height: 1.25;
   padding-bottom: 16px;
   margin-bottom: 20px;
-  border-bottom: 1px solid var(--accent);
+  border-bottom: var(--rule) solid var(--accent);
 }
 
 @media (min-width: 800px) {
@@ -1071,7 +1180,7 @@ button {
   left: 0;
   top: -6px;
   font-size: 1.5em;
-  color: var(--accent-dark);
+  color: var(--accent);
 }
 
 .faq-number {
