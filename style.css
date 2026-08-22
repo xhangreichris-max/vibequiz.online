@@ -16,7 +16,7 @@
   --muted: #8C8880;
   --text-secondary: #8C8880;
   --border: #E8DDD0;
-  --accent: #B8A6E8;
+  --accent: #8E79C9;
   --accent-dark: #3a2d7a;
   --card: #FFFFFF;
   --radius-sm: 10px;
@@ -258,13 +258,52 @@ main.wrap > * {
   font-size: 28px;
   color: var(--ink);
   text-transform: lowercase;
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+}
+
+.logo-mark {
+  color: var(--accent);
 }
 
 .tagline {
   font-size: 13px;
   color: var(--muted);
   margin-top: 4px;
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.site-nav a {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.site-nav a:hover {
+  color: var(--ink);
+}
+
+.site-nav-current {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+@media (max-width: 480px) {
+  .site-nav {
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
 }
 
 .flagship-card {
@@ -389,10 +428,6 @@ main.wrap > * {
 
 .quiz-header {
   padding: 20px 0 8px;
-}
-
-.quiz-header .logo {
-  font-size: 20px;
 }
 
 .quiz-h1 {
@@ -1265,6 +1300,19 @@ main.wrap > * {
   margin-right: 10px;
   font-variant-numeric: tabular-nums;
   color: var(--accent-dark);
+}
+
+.section-body a,
+.faq-item a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--border);
+  text-underline-offset: 2px;
+}
+
+.section-body a:hover,
+.faq-item a:hover {
+  text-decoration-color: currentColor;
 }
 
 /* FAQ ANSWER — flat 16px, no desktop bump. */
