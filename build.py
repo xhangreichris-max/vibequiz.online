@@ -10,6 +10,7 @@ run this script.
 import html
 import json
 import os
+import re
 import shutil
 from datetime import date
 
@@ -19,6 +20,26 @@ DIST = os.path.join(ROOT, "dist")
 
 def esc(value):
     return html.escape(str(value), quote=True)
+
+
+# Article/FAQ body text is authored in quizzes-config.json, not user input,
+# and as of Phase 6a can contain a small number of hand-written <a href="...">
+# contextual links. Escape everything except those specific pre-built anchor
+# tags, so the links survive as real <a> elements instead of being escaped
+# into visible "&lt;a href..." text.
+_LINK_RE = re.compile(r'<a href="[^"]*">[^<]*</a>')
+
+
+def esc_with_links(value):
+    text = str(value)
+    parts = []
+    last = 0
+    for m in _LINK_RE.finditer(text):
+        parts.append(esc(text[last:m.start()]))
+        parts.append(m.group(0))
+        last = m.end()
+    parts.append(esc(text[last:]))
+    return "".join(parts)
 
 
 def load_config():
@@ -64,7 +85,7 @@ def render_article(article, pull_quote=None):
         parts.append('<div class="section-body">')
         parts.append(f"<h2>{esc(section['heading'])}</h2>")
         for para in paragraphs:
-            parts.append(f"<p>{esc(para)}</p>")
+            parts.append(f"<p>{esc_with_links(para)}</p>")
         parts.append("</div>")
         parts.append("</section>")
         if i == 2 and pull_quote:
@@ -90,7 +111,7 @@ def render_faq(faq):
         number = f"{i:02d}"
         parts.append('<div class="faq-item">')
         parts.append(f'<h3><span class="faq-number">{number}</span>{esc(item["question"])}</h3>')
-        parts.append(f"<p>{esc(item['answer'])}</p>")
+        parts.append(f"<p>{esc_with_links(item['answer'])}</p>")
         parts.append("</div>")
     return "\n".join(parts)
 
@@ -176,6 +197,18 @@ def render_footer_links(quizzes):
     return "\n".join(parts)
 
 
+def render_nav(quizzes, current_slug):
+    parts = ['<nav class="site-nav" aria-label="All quizzes">']
+    for quiz in quizzes:
+        label = FOOTER_LABELS.get(quiz["slug"], quiz["card_title"])
+        if quiz["slug"] == current_slug:
+            parts.append(f'<span class="site-nav-current" aria-current="page">{esc(label)}</span>')
+        else:
+            parts.append(f'<a href="/{esc(quiz["slug"])}/index.html">{esc(label)}</a>')
+    parts.append("</nav>")
+    return "\n".join(parts)
+
+
 # --------------------------------------------------------------------------
 # Homepage cards
 # --------------------------------------------------------------------------
@@ -212,9 +245,10 @@ def render_secondary_card(quiz):
 # Page builders
 # --------------------------------------------------------------------------
 
-def build_quiz_page(quiz, site, footer_links_html, template):
+def build_quiz_page(quiz, all_quizzes, site, footer_links_html, template):
     canonical = f"{site['base_url']}/{quiz['slug']}/"
     tokens = {
+        "NAV_HTML": render_nav(all_quizzes, quiz["slug"]),
         "PAGE_TITLE": esc(quiz["title"]),
         "META_DESCRIPTION": esc(quiz["meta_description"]),
         "CANONICAL_URL": esc(canonical),
@@ -260,6 +294,7 @@ def build_homepage(quizzes, site, homepage_content, footer_links_html, template)
         "OG_DESCRIPTION": esc(meta_description),
         "OG_URL": esc(canonical),
         "JSON_LD": build_site_json_ld(site),
+        "NAV_HTML": render_nav(quizzes, None),
         "FLAGSHIP_CARD_HTML": render_flagship_card(flagship),
         "SECONDARY_CARDS_HTML": "\n".join(render_secondary_card(q) for q in secondary),
         "HOMEPAGE_CONTENT": '<div class="homepage-content">' + homepage_content + "</div>",
@@ -286,6 +321,7 @@ def build_404(quizzes, site, footer_links_html, template):
         "OG_TITLE": esc(title),
         "OG_DESCRIPTION": esc(meta_description),
         "OG_URL": esc(canonical),
+        "NAV_HTML": render_nav(quizzes, None),
         "FLAGSHIP_CARD_HTML": render_flagship_card(flagship),
         "SECONDARY_CARDS_HTML": "\n".join(render_secondary_card(q) for q in secondary),
         "FOOTER_LINKS": footer_links_html,
@@ -348,7 +384,7 @@ def main():
     footer_links_html = render_footer_links(quizzes)
 
     for quiz in quizzes:
-        build_quiz_page(quiz, site, footer_links_html, quiz_template)
+        build_quiz_page(quiz, quizzes, site, footer_links_html, quiz_template)
         print(f"  built /{quiz['slug']}/")
 
     build_homepage(quizzes, site, config["homepage_content"], footer_links_html, index_template)
