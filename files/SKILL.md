@@ -99,10 +99,15 @@ Phase 1  Physical answers and juice layer      references/interaction.md
 Phase 2  Card flip reveal and sound            references/reveal-and-sound.md
 Phase 3  Trait data entry                      references/traits.md
 Phase 4  Vibe Passport                         references/passport.md
+Phase 5  Layout and typography                 references/layout-and-typography.md
 ```
 
 Phase 3 must come before Phase 4 — the passport's archetype system
 reads the trait data.
+
+Phase 5 must come last. It touches nearly every file and would
+create merge conflicts with any of the earlier phases. It is split
+into four sub-steps (5a–5d), each with its own gate and commit.
 
 ---
 
@@ -142,6 +147,10 @@ git commit -m "v2 phase N: <short description>"
 | 2 Reveal + sound | `quiz-engine.js`, `style.css` | config, build.py, both templates |
 | 3 Traits | `quizzes-config.json` | all code files |
 | 4 Passport | `quiz-engine.js`, `style.css`, `template_index.html` | config, build.py, template.html |
+| 5a Typography | `style.css`, both templates | config, build.py, quiz-engine.js |
+| 5b Article layout | `style.css`, `build.py`, `quizzes-config.json` (adds `pull_quote` only) | quiz-engine.js |
+| 5c Art direction | `style.css`, `build.py` | config, quiz-engine.js |
+| 5d Question templates | `style.css`, `quiz-engine.js` | config, build.py, both templates |
 
 ---
 
@@ -211,6 +220,9 @@ Read these when the phase calls for them, not before.
   ten aesthetic results.
 - `references/passport.md` — Phase 4. Storage schema, placement,
   archetype computation, the archetype matrix, `?dna=` sharing.
+- `references/layout-and-typography.md` — Phase 5, split into four
+  sub-steps. Font choice and type scale, desktop editorial grid,
+  per-quiz art direction tokens, rotating question layouts.
 - `references/launch-and-roadmap.md` — Not a build phase. Launch
   sequence, post-launch timeline, next-quiz research list, revenue
   expectations, deferred V3 ideas. Read when the question is about
