@@ -1,0 +1,17 @@
+# Cloudflare Pages config for Window Card (xmas.vibequiz.online)
+name = "xmas-window-card"
+pages_build_output_dir = "public"
+compatibility_date = "2026-11-22"
+
+# --- Phase 3: uncomment and fill in after creating the resources in the dashboard ---
+
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "xmas-cards"
+# database_id = "PASTE-D1-DATABASE-ID-HERE"
+
+# [[r2_buckets]]
+# binding = "CARDS_BUCKET"
+# bucket_name = "xmas-cards"
+
+# Secrets (GROQ_API_KEY) are NOT stored here. Add them in the dashboard as encrypted variables.

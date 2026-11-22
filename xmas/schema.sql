@@ -1,0 +1,1 @@
+-- schema.sql: database schema placeholder (cards, messages). Not written yet.

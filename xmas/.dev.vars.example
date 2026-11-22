@@ -1,0 +1,2 @@
+# Copy to .dev.vars for local dev only. Never commit .dev.vars.
+GROQ_API_KEY=your_key_here
